@@ -1,0 +1,37 @@
+service: sass
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: eu-west-1
+  logRetentionInDays: 7
+  versionFunctions: false
+
+  ecr:
+    images:
+      saaslite:
+        path: './'
+
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Resource: 'arn:aws:s3:::${self:resources.Resources.bucket.Properties.BucketName}/*'
+          Action: 's3:GetObject'
+
+functions:
+  saaslite:
+    image: saaslite
+    events:
+      - httpApi:
+          path: '*'
+    environment:
+      SAASLITE_S3_BUCKET_NAME: ${self:resources.Resources.bucket.Properties.BucketName}
+
+resources:
+  Resources:
+    bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: saaslite
