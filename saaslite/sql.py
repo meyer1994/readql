@@ -23,7 +23,7 @@ class S3VFS(apsw.VFS):
         return S3VFSFile(name, flags, self.client, self.bucket)
 
 
-class S3VFSFile():
+class S3VFSFile(object):
     def __init__(self, name, flags, client, bucket):
         self.name = name.filename().lstrip('/')
         self.flags = flags

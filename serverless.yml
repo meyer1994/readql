@@ -24,7 +24,7 @@ functions:
   saaslite:
     image: saaslite
     timeout: 10
-    memorySize: 512
+    memorySize: 128
     events:
       - httpApi:
           path: '*'
