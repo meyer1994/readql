@@ -32,6 +32,5 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: current
-      - uses: serverless/github-action@v3
-        with:
-          args: deploy
+          cache: npm
+      - run: npx serverless deploy --verbose
