@@ -1,10 +1,8 @@
 from dataclasses import dataclass
 
-import apsw
-import boto3
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 
-from saaslite import sql
+from saaslite import select
 from saaslite.config import Settings
 
 
@@ -18,16 +16,16 @@ class QueryDeps:
     settings: Settings = Depends(Settings)
 
 
-@app.get('/{filename}')
-async def query(ctx: QueryDeps = Depends(QueryDeps)) -> list:
-    flags = apsw.SQLITE_OPEN_READONLY | apsw.SQLITE_OPEN_URI
-    vfs = sql.S3VFS(ctx.settings.s3, ctx.settings.SAASLITE_S3_BUCKET_NAME)
+@app.get('/{filename}.db')
+async def query_sql(ctx: QueryDeps = Depends(QueryDeps)) -> list:
+    bucket_key = f'{ctx.filename}.db'
+    bucket_name = ctx.settings.SAASLITE_S3_BUCKET_NAME
+    bucket_region = ctx.settings.SAASLITE_S3_BUCKET_REGION
 
-    file = f'file:/dbs/{ctx.filename}'
-    connection = apsw.Connection(file, flags=flags, vfs=vfs.name)
-    connection.setrowtrace(sql.DictRowFactory)
+    sqlite = select.SelectSQLite(bucket_region, bucket_name, bucket_key)
 
-    cursor = connection.cursor()
-    data = cursor.execute(ctx.q)
+    if sqlite.exists():
+        return sqlite.sql(ctx.q)
 
-    return list(data)
+    detail = f'Database {bucket_key} not found'
+    raise HTTPException(status_code=404, detail=detail)
