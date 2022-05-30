@@ -37,4 +37,5 @@ jobs:
           node-version: current
           cache: npm
       - run: npm ci
+      - run: npx serverless package --verbose
       - run: npx serverless deploy --verbose
