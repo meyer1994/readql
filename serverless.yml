@@ -27,7 +27,11 @@ functions:
     memorySize: 128
     events:
       - httpApi:
-          path: '*'
+          method: GET
+          path: '/{param}'
+      - httpApi:
+          method: POST
+          path: '/'
     environment:
       SAASLITE_S3_BUCKET_NAME: ${self:resources.Resources.bucket.Properties.BucketName}
       SAASLITE_S3_BUCKET_REGION: ${self:provider.region}
