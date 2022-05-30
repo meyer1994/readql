@@ -3,7 +3,7 @@
 [![build](https://github.com/meyer1994/saaslite/actions/workflows/build.yml/badge.svg)](https://github.com/meyer1994/saaslite/actions/workflows/build.yml)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-SQLite as a service
+Read only SQLite as a service
 
 ## Table of Contents
 
