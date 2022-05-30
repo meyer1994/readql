@@ -30,6 +30,7 @@ functions:
           path: '*'
     environment:
       SAASLITE_S3_BUCKET_NAME: ${self:resources.Resources.bucket.Properties.BucketName}
+      SAASLITE_S3_BUCKET_REGION: ${self:provider.region}
 
 resources:
   Resources:
