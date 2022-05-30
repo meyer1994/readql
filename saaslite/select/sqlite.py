@@ -64,6 +64,4 @@ class SelectSQLite(SelectBase):
         connection.setrowtrace(DictRowFactory)
 
         cursor = connection.cursor()
-        data = cursor.execute(sql)
-
-        return list(data)
+        yield from cursor.execute(sql)
