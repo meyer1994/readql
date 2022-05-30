@@ -1,0 +1,20 @@
+{
+  "name": "saaslite",
+  "version": "1.0.0",
+  "description": "SQLite as a service",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meyer1994/saaslite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meyer1994/saaslite/issues"
+  },
+  "homepage": "https://github.com/meyer1994/saaslite#readme",
+  "dependencies": {
+    "serverless": "^3.18.2"
+  }
+}

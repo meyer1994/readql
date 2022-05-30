@@ -5,6 +5,10 @@ updates:
     directory: './'
     schedule:
       interval: daily
+  - package-ecosystem: node
+    directory: './'
+    schedule:
+      interval: daily
   - package-ecosystem: docker
     directory: './'
     schedule:
