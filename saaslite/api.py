@@ -1,4 +1,5 @@
 import uuid
+from enum import Enum
 from dataclasses import dataclass
 
 from fastapi import FastAPI, Depends, HTTPException
@@ -33,9 +34,14 @@ async def query(ctx: Query = Depends(Query)) -> list:
     raise HTTPException(status_code=404, detail=detail)
 
 
+class Kind(str, Enum):
+    CSV = 'csv'
+    SQLITE = 'sqlite'
+
+
 @dataclass
 class Post:
-    kind: str = 'sqlite'
+    kind: Kind = Kind.SQLITE
     conf: Conf = Depends(Conf)
 
 
@@ -44,7 +50,13 @@ async def post(ctx: Post = Depends(Post)) -> dict:
     bucket_name = ctx.conf.SAASLITE_S3_BUCKET_NAME
     bucket_region = ctx.conf.SAASLITE_S3_BUCKET_REGION
 
-    key = '%s.db' % uuid.uuid4()
+    key = uuid.uuid4()
+
+    if ctx.kind == Kind.SQLITE:
+        key = f'{key}.db'
+    if ctx.kind == Kind.CSV:
+        key = f'{key}.csv'
+
     url = Presigned(bucket_region, bucket_name)
 
     return {

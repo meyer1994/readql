@@ -19,6 +19,9 @@ provider:
         - Effect: 'Allow'
           Resource: 'arn:aws:s3:::${self:resources.Resources.bucket.Properties.BucketName}/*'
           Action: 's3:GetObject'
+        - Effect: 'Allow'
+          Resource: 'arn:aws:s3:::${self:resources.Resources.bucket.Properties.BucketName}/*'
+          Action: 's3:PutObject'
 
 functions:
   saaslite:
