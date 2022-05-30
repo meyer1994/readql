@@ -4,7 +4,7 @@ import boto3
 from botocore.errorfactory import ClientError
 
 
-class SelectBase(object):
+class SelectBase(ABC):
     def __init__(self, bucket_region: str, bucket_name: str, bucket_key: str):
         super(SelectBase, self).__init__()
         self.bucket_region = bucket_region
