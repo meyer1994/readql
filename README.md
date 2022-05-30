@@ -1,82 +1,118 @@
-<!--
-title: 'AWS Python Example'
-description: 'This template demonstrates how to deploy a Python function running on AWS Lambda using the traditional Serverless Framework.'
-layout: Doc
-framework: v3
-platform: AWS
-language: python
-priority: 2
-authorLink: 'https://github.com/serverless'
-authorName: 'Serverless, inc.'
-authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
--->
+# SaasLite
 
+[![build](https://github.com/meyer1994/saaslite/actions/workflows/build.yml/badge.svg)](https://github.com/meyer1994/saaslite/actions/workflows/build.yml)
+[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-# Serverless Framework AWS Python Example
+SQLite as a service
 
-This template demonstrates how to deploy a Python function running on AWS Lambda using the traditional Serverless Framework. The deployed function does not include any event definitions as well as any kind of persistence (database). For more advanced configurations check out the [examples repo](https://github.com/serverless/examples/) which includes integrations with SQS, DynamoDB or examples of functions that are triggered in `cron`-like manner. For details about configuration of specific `events`, please refer to our [documentation](https://www.serverless.com/framework/docs/providers/aws/events/).
+## Table of Contents
+
+- [About](#about)
+- [Install](#install)
+- [Deploy](#deploy)
+- [Usage](#usage)
+- [Thanks](#thanks)
+
+## About
+
+Project that allows you to query [SQLite][1] databases hosted on AWS [S3][2]
+with a very simple HTTP API. This is good when you have an static database that
+you want to make available to your applications but you can't, or do not want,
+to host the file yourself.
+
+Some use cases might be:
+
+- Making the database available for [JAMStack][3] applications hosted on
+services like [Cloudflare][4] workers, [Vercel][5], [Netlify][6], or others
+- Sharing a database with multiple services without the need of replicating it
+- Something else... (I am not creative today)
+
+I developed this based on the first use case, I needed to make a small database
+available for an application I deployed in Vercel. However, I could not send the
+database itself (couple hundreds of megabytes) with the built application. Also,
+I did not want to spin up some expensive SQL database for it.
+
+### Benefits
+
+It is very cheap and fast enough if you do not need full scale of SQL queries
+to work fast. Besides, by being deployed using AWS Lambda, it costs almost
+nothing to run. Of course, if your application gets VERY popular, you should
+consider migrating off this approach.
+
+### Drawbacks
+
+As you can imagine, this implementation has many drawbacks in comparison to
+hosting the file yourself besides your application. Depending on the queries
+you need to make, they become SLOW. Really slow. If your database is too big,
+hundreds of megabytes, you MUST create the proper indexes for this approach to
+be usable. Yet, even with indexes, some queries force a full table scan, like
+`LIKE`, making this approach terribly slow.
+
+## Install
+
+This application was created to run on [Lambda][7] functions. It assumes you
+have the S3 instance deployed and with the `GetObject` permission properly set.
+
+```sh
+$ pip install -r requirements.txt
+```
+
+If you want to run it locally:
+
+```sh
+$ pip install uvicorn
+$ export SAASLITE_S3_BUCKET_NAME=bucket-name
+$ export SAASLITE_S3_BUCKET_REGION=bucket-region
+$ uvicorn handler:app
+# Application should be available on `localhost:8000`
+```
+
+## Deploy
+
+We use [Serverless][8] framework to deploy the project to AWS Lambda. So, to
+deploy it is as easy as:
+
+```sh
+$ npx serverless deploy
+```
+
+[Docker][9] deployment is used because [APSW][10] did not like the default
+Lambda python environment.
 
 ## Usage
 
-### Deployment
+To use this service is as easy as uploading your SQLite database to your S3
+bucket and querying it using your favourite HTTP client:
 
-In order to deploy the example, you need to run the following command:
-
-```
-$ serverless deploy
-```
-
-After running deploy, you should see output similar to:
-
-```bash
-Deploying aws-python-project to stage dev (us-east-1)
-
-✔ Service deployed to stack aws-python-project-dev (112s)
-
-functions:
-  hello: aws-python-project-dev-hello (1.5 kB)
+```sh
+$ aws s3 cp your.db s3://bucket/dbs/your.db
+$ xh GET your-lambda.com/your.db q=='SELECT 123 AS num'
+[
+    {
+        "num": 123
+    }
+]
 ```
 
-### Invocation
+That is it! Have fun!
 
-After successful deployment, you can invoke the deployed function by using the following command:
+## Thanks
 
-```bash
-serverless invoke --function hello
-```
+- [@rogerbinns][11] for creating the [APSW][10] which allowed me to
+do this.
+- [@uktrade][12] for the [implementation][13] that I used as a base to my own
+VFS.
 
-Which should result in response similar to the following:
-
-```json
-{
-    "statusCode": 200,
-    "body": "{\"message\": \"Go Serverless v3.0! Your function executed successfully!\", \"input\": {}}"
-}
-```
-
-### Local development
-
-You can invoke your function locally by using the following command:
-
-```bash
-serverless invoke local --function hello
-```
-
-Which should result in response similar to the following:
-
-```
-{
-    "statusCode": 200,
-    "body": "{\"message\": \"Go Serverless v3.0! Your function executed successfully!\", \"input\": {}}"
-}
-```
-
-### Bundling dependencies
-
-In case you would like to include third-party dependencies, you will need to use a plugin called `serverless-python-requirements`. You can set it up by running the following command:
-
-```bash
-serverless plugin install -n serverless-python-requirements
-```
-
-Running the above will automatically add `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and add it as a `devDependency` to `package.json` file. The `package.json` file will be automatically created if it doesn't exist beforehand. Now you will be able to add your dependencies to `requirements.txt` file (`Pipfile` and `pyproject.toml` is also supported but requires additional configuration) and they will be automatically injected to Lambda package during build process. For more details about the plugin's configuration, please refer to [official documentation](https://github.com/UnitedIncome/serverless-python-requirements).
+[1]: https://sqlite.org/
+[2]: https://aws.amazon.com/s3/
+[3]: https://jamstack.org/
+[4]: https://workers.cloudflare.com/
+[5]: https://vercel.com/
+[6]: https://www.netlify.com/
+[7]: https://aws.amazon.com/lambda/
+[8]: https://www.serverless.com/
+[9]: https://www.docker.com/
+[10]: https://rogerbinns.github.io/apsw/
+[11]: https://github.com/rogerbinns
+[12]: https://github.com/uktrade/
+[13]: https://github.com/uktrade/sqlite-s3vfs
