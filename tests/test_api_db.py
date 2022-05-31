@@ -9,7 +9,7 @@ from saaslite.api import db
 class TestApiDB(IsolatedAsyncioTestCase):
 
     @patch('saaslite.api.db.FileDB')
-    async def test_query_db(self, mocked):
+    async def test_get(self, mocked):
         """ Calls SQL method if object exists """
         ctx = Mock()
         ctx.filename = 'abc'
@@ -25,7 +25,7 @@ class TestApiDB(IsolatedAsyncioTestCase):
         mocked().sql.assert_called_once_with(ctx.q)
 
     @patch('saaslite.api.db.FileDB')
-    async def test_query_not_exists(self, mocked):
+    async def test_get_not_exists(self, mocked):
         """ Raises HTTPException if object does not  """
         mocked().exists.return_value = False
         mocked.reset_mock()

@@ -10,7 +10,7 @@ class TestApiUpload(IsolatedAsyncioTestCase):
 
     @patch('saaslite.api.upload.uuid.uuid4')
     @patch('saaslite.api.upload.Presigned')
-    async def test_post_sqlite(self, mocked_presigned, mocked_uuid):
+    async def test_post_db(self, mocked_presigned, mocked_uuid):
         """ Creates a new `uuid.db` object """
         mocked_uuid.return_value = 'abc'
         mocked_uuid.reset_mock()
