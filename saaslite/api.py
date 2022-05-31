@@ -4,6 +4,7 @@ from enum import Enum
 from dataclasses import dataclass
 
 from fastapi import FastAPI, Depends, HTTPException
+from pydantic import constr
 
 from saaslite.url import Presigned
 from saaslite.select import Select
@@ -36,12 +37,18 @@ async def query_db(ctx: QueryDB = Depends(QueryDB)) -> list:
     raise HTTPException(status_code=404, detail=detail)
 
 
+class Header(str, Enum):
+    USE = 'USE'
+    NONE = 'NONE'
+    IGNORE = 'IGNORE'
+
+
 @dataclass
 class QueryCSV:
     q: str
     filename: str
-    header: bool = True
-    delimiter: str = ','
+    header: Header = Header.NONE
+    delimiter: constr(min_length=1, max_length=1) = ','
     conf: Conf = Depends(Conf)
 
 
