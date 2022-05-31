@@ -3,7 +3,7 @@ import logging
 
 from mangum import Mangum
 
-from saaslite.api import app
+from saaslite import app
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
