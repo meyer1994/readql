@@ -18,7 +18,6 @@ class SelectCSV(SelectBase):
         input_serial = copy.deepcopy(self.INPUT_SERIAL)
         input_serial['CSV']['FieldDelimiter'] = delimiter
         input_serial['CSV']['FileHeaderInfo'] = 'USE' if header else 'NONE'
-        print(input_serial)
 
         response = self.client.select_object_content(
             Bucket=self.bucket_name,

@@ -1,4 +1,5 @@
 import uuid
+import logging
 from enum import Enum
 from dataclasses import dataclass
 
@@ -8,7 +9,7 @@ from saaslite.url import Presigned
 from saaslite.select import Select
 from saaslite.config import Conf
 
-
+logger = logging.getLogger(__name__)
 app = FastAPI()
 
 
@@ -21,6 +22,7 @@ class QueryDB:
 
 @app.get('/{filename}.db')
 async def query_db(ctx: QueryDB = Depends(QueryDB)) -> list:
+    logger.info('%s', ctx)
     bucket_key = f'{ctx.filename}.db'
     bucket_name = ctx.conf.SAASLITE_S3_BUCKET_NAME
     bucket_region = ctx.conf.SAASLITE_S3_BUCKET_REGION
@@ -45,6 +47,7 @@ class QueryCSV:
 
 @app.get('/{filename}.csv')
 async def query_csv(ctx: QueryCSV = Depends(QueryCSV)) -> list:
+    logger.info('%s', ctx)
     bucket_key = f'{ctx.filename}.csv'
     bucket_name = ctx.conf.SAASLITE_S3_BUCKET_NAME
     bucket_region = ctx.conf.SAASLITE_S3_BUCKET_REGION
@@ -71,6 +74,7 @@ class Post:
 
 @app.post('/')
 async def post(ctx: Post = Depends(Post)) -> dict:
+    logger.info('%s', ctx)
     bucket_name = ctx.conf.SAASLITE_S3_BUCKET_NAME
     bucket_region = ctx.conf.SAASLITE_S3_BUCKET_REGION
 
