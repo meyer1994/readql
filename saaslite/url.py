@@ -11,7 +11,7 @@ class Presigned(object):
     def client(self):
         return boto3.client('s3', region_name=self.bucket_region)
 
-    def upload(self, key: str, seconds: int = 600) -> str:
+    def generate(self, key: str, seconds: int = 600) -> str:
         params = { 'Bucket': self.bucket_name, 'Key': key }
         return self.client.generate_presigned_url(
             Params=params,

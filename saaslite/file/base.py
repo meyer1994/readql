@@ -1,12 +1,15 @@
+import logging
 from abc import ABC, abstractmethod
 
 import boto3
 from botocore.errorfactory import ClientError
 
+logger = logging.getLogger(__name__)
 
-class SelectBase(ABC):
+
+class FileBase(ABC):
     def __init__(self, bucket_region: str, bucket_name: str, bucket_key: str):
-        super(SelectBase, self).__init__()
+        super(FileBase, self).__init__()
         self.bucket_region = bucket_region
         self.bucket_name = bucket_name
         self.bucket_key = bucket_key
@@ -26,6 +29,7 @@ class SelectBase(ABC):
         """
         try:
             self.client.head_object(Bucket=self.bucket_name, Key=self.bucket_key)  # noqa
-        except ClientError:
+        except ClientError as e:
+            logger.exception(e)
             return False
         return True
