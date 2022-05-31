@@ -6,6 +6,7 @@ from mangum import Mangum
 from saaslite.api import app
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def handler(event, context):
