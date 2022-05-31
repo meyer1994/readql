@@ -13,14 +13,14 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-class Kind(str, Enum):
-    CSV = 'csv'
-    SQLITE = 'sqlite'
+class File(str, Enum):
+    CSV = 'CSV'
+    DB = 'DB'
 
 
 @dataclass
 class Post:
-    kind: Kind = Kind.SQLITE
+    file: File = File.DB
     conf: Conf = Depends(Conf)
 
 
@@ -33,9 +33,9 @@ async def post(ctx: Post = Depends(Post)) -> dict:
 
     key = uuid.uuid4()
 
-    if ctx.kind == Kind.SQLITE:
+    if ctx.kind == File.DB:
         key = f'{key}.db'
-    if ctx.kind == Kind.CSV:
+    if ctx.kind == File.CSV:
         key = f'{key}.csv'
 
     url = Presigned(bucket_region, bucket_name)
