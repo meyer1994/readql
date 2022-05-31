@@ -10,7 +10,7 @@ class TestPresigned(TestCase):
     def test_upload(self, mocked):
         """ Calls `generate_presigned_url` from S3 client """
         presigned = Presigned('bucket-region', 'bucket-name')
-        presigned.upload('bucket-key', 123)
+        presigned.generate('bucket-key', 123)
 
         mocked().generate_presigned_url.assert_called_once_with(
             Params={'Bucket': 'bucket-name', 'Key': 'bucket-key'},
@@ -22,7 +22,7 @@ class TestPresigned(TestCase):
     def test_upload_defaults(self, mocked):
         """ Calls `generate_presigned_url` from S3 client, with defaults """
         presigned = Presigned('bucket-region', 'bucket-name')
-        presigned.upload('bucket-key')
+        presigned.generate('bucket-key')
 
         mocked().generate_presigned_url.assert_called_once_with(
             Params={'Bucket': 'bucket-name', 'Key': 'bucket-key'},

@@ -24,7 +24,7 @@ class Post:
 
 
 @router.post('/')
-async def upload(ctx: Post = Depends(Post)) -> dict:
+async def post(ctx: Post = Depends(Post)) -> dict:
     logger.info('%s', ctx)
 
     bucket_name = ctx.conf.SAASLITE_S3_BUCKET_NAME

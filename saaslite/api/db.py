@@ -19,7 +19,7 @@ class Query:
 
 
 @router.get('/{filename}.db')
-async def query(ctx: Query = Depends(Query)) -> list:
+async def get(ctx: Query = Depends(Query)) -> list:
     logger.info('%s', ctx)
 
     bucket_key = f'{ctx.filename}.db'
