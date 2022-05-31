@@ -15,15 +15,15 @@ def DictRowFactory(cursor, row: tuple) -> dict:
 
 
 class S3VFS(apsw.VFS):
-    def __init__(self, client, bucket):
+    def __init__(self, client, bucket_name):
         self.name = 's3'
         self.client = client
-        self.bucket = bucket
+        self.bucket_name = bucket_name
         apsw.VFS.__init__(self, self.name, base='')
 
     def xOpen(self, name, flags):
-        logger.info('Opening file: %s', name)
-        return S3VFSFile(name, flags, self.client, self.bucket)
+        logger.info('Opening file: s3://%s/%s', self.bucket_name, name.filename())  # noqa
+        return S3VFSFile(name, flags, self.client, self.bucket_name)
 
 
 class S3VFSFile(object):
