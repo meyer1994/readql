@@ -38,6 +38,7 @@ async def query_db(ctx: QueryDB = Depends(QueryDB)) -> list:
 class QueryCSV:
     q: str
     filename: str
+    header: bool = True
     delimiter: str = ','
     conf: Conf = Depends(Conf)
 
@@ -51,7 +52,7 @@ async def query_csv(ctx: QueryCSV = Depends(QueryCSV)) -> list:
     select = Select(bucket_region, bucket_name, bucket_key)
 
     if select.exists():
-        return select.sql(ctx.q, ctx.delimiter)
+        return select.sql(ctx.q, ctx.delimiter, ctx.header)
 
     detail = f'Database {bucket_key} not found'
     raise HTTPException(status_code=404, detail=detail)

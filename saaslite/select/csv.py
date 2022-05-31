@@ -8,12 +8,16 @@ class SelectCSV(SelectBase):
     OUTPUT_SERIAL = {'JSON': {} }
     INPUT_SERIAL = {
         'CompressionType': 'NONE',
-        'CSV': { 'FileHeaderInfo': 'None' },
+        'CSV': {
+            'FileHeaderInfo': 'None',
+            'FieldDelimiter': ','
+        },
     }
 
-    def sql(self, sql: str, delimiter: str = ',') -> list:
+    def sql(self, sql: str, delimiter: str = ',', header: bool = False) -> list:
         input_serial = copy.deepcopy(self.INPUT_SERIAL)
         input_serial['CSV']['FieldDelimiter'] = delimiter
+        input_serial['CSV']['FileHeaderInfo'] = 'USE' if header else 'NONE'
         print(input_serial)
 
         response = self.client.select_object_content(
