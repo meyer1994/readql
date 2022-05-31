@@ -13,15 +13,15 @@ app = FastAPI()
 
 
 @dataclass
-class Query:
+class QueryDB:
     q: str
     filename: str
     conf: Conf = Depends(Conf)
 
 
-@app.get('/{filename}')
-async def query(ctx: Query = Depends(Query)) -> list:
-    bucket_key = ctx.filename
+@app.get('/{filename}.db')
+async def query_db(ctx: QueryDB = Depends(QueryDB)) -> list:
+    bucket_key = f'{ctx.filename}.db'
     bucket_name = ctx.conf.SAASLITE_S3_BUCKET_NAME
     bucket_region = ctx.conf.SAASLITE_S3_BUCKET_REGION
 
@@ -29,6 +29,29 @@ async def query(ctx: Query = Depends(Query)) -> list:
 
     if select.exists():
         return select.sql(ctx.q)
+
+    detail = f'Database {bucket_key} not found'
+    raise HTTPException(status_code=404, detail=detail)
+
+
+@dataclass
+class QueryCSV:
+    q: str
+    filename: str
+    delimiter: str = ','
+    conf: Conf = Depends(Conf)
+
+
+@app.get('/{filename}.csv')
+async def query_csv(ctx: QueryCSV = Depends(QueryCSV)) -> list:
+    bucket_key = f'{ctx.filename}.csv'
+    bucket_name = ctx.conf.SAASLITE_S3_BUCKET_NAME
+    bucket_region = ctx.conf.SAASLITE_S3_BUCKET_REGION
+
+    select = Select(bucket_region, bucket_name, bucket_key)
+
+    if select.exists():
+        return select.sql(ctx.q, ctx.delimiter)
 
     detail = f'Database {bucket_key} not found'
     raise HTTPException(status_code=404, detail=detail)

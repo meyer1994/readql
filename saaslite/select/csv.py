@@ -1,4 +1,5 @@
 import json
+import copy
 
 from saaslite.select.base import SelectBase
 
@@ -10,13 +11,17 @@ class SelectCSV(SelectBase):
         'CSV': { 'FileHeaderInfo': 'None' },
     }
 
-    def sql(self, sql: str) -> list:
+    def sql(self, sql: str, delimiter: str = ',') -> list:
+        input_serial = copy.deepcopy(self.INPUT_SERIAL)
+        input_serial['CSV']['FieldDelimiter'] = delimiter
+        print(input_serial)
+
         response = self.client.select_object_content(
             Bucket=self.bucket_name,
             Key=self.bucket_key,
             ExpressionType='SQL',
             Expression=sql,
-            InputSerialization=self.INPUT_SERIAL,
+            InputSerialization=input_serial,
             OutputSerialization=self.OUTPUT_SERIAL,
         )
 
