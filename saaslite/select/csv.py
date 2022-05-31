@@ -14,10 +14,11 @@ class SelectCSV(SelectBase):
         },
     }
 
-    def sql(self, sql: str, delimiter: str = ',', header: bool = False) -> list:
+    def sql(self, sql: str, delimiter: str = ',', header: str = 'NONE') -> list:
         input_serial = copy.deepcopy(self.INPUT_SERIAL)
         input_serial['CSV']['FieldDelimiter'] = delimiter
-        input_serial['CSV']['FileHeaderInfo'] = 'USE' if header else 'NONE'
+        input_serial['CSV']['FileHeaderInfo'] = header
+        print(input_serial)
 
         response = self.client.select_object_content(
             Bucket=self.bucket_name,

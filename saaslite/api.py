@@ -62,7 +62,7 @@ async def query_csv(ctx: QueryCSV = Depends(QueryCSV)) -> list:
     select = Select(bucket_region, bucket_name, bucket_key)
 
     if select.exists():
-        return select.sql(ctx.q, ctx.delimiter, ctx.header)
+        return select.sql(ctx.q, ctx.delimiter, ctx.header.value)
 
     detail = f'Database {bucket_key} not found'
     raise HTTPException(status_code=404, detail=detail)
