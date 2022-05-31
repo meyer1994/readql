@@ -17,7 +17,7 @@ class TestApiUpload(IsolatedAsyncioTestCase):
         mocked_presigned().generate.return_value = 'url'
         mocked_presigned.reset_mock()
 
-        ctx = Mock(kind='sqlite')
+        ctx = Mock(kind=upload.File.DB)
         result = await upload.post(ctx)
 
         expected = {'object_key': 'abc.db', 'upload_url': 'url'}
@@ -39,7 +39,7 @@ class TestApiUpload(IsolatedAsyncioTestCase):
         mocked_presigned().generate.return_value = 'url'
         mocked_presigned.reset_mock()
 
-        ctx = Mock(kind='csv')
+        ctx = Mock(kind=upload.File.CSV)
         result = await upload.post(ctx)
 
         expected = {'object_key': 'abc.csv', 'upload_url': 'url'}
