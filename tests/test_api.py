@@ -6,18 +6,20 @@ from fastapi import HTTPException
 from saaslite import api
 
 
-class TestApiQuery(IsolatedAsyncioTestCase):
+class TestApiQueryDB(IsolatedAsyncioTestCase):
 
     @patch('saaslite.api.Select')
-    async def test_query(self, mocked):
+    async def test_query_db(self, mocked):
         """ Calls SQL method if object exists """
         ctx = Mock()
-        await api.query(ctx)
+        ctx.filename = 'abc'
+
+        await api.query_db(ctx)
 
         mocked.assert_called_once_with(
             ctx.conf.SAASLITE_S3_BUCKET_REGION,
             ctx.conf.SAASLITE_S3_BUCKET_NAME,
-            ctx.filename,
+            f'{ctx.filename}.db',
         )
         mocked().exists.assert_called_once_with()
         mocked().sql.assert_called_once_with(ctx.q)
@@ -29,13 +31,15 @@ class TestApiQuery(IsolatedAsyncioTestCase):
         mocked.reset_mock()
 
         ctx = Mock()
+        ctx.filename = 'abc'
+
         with self.assertRaises(HTTPException):
-            await api.query(ctx)
+            await api.query_db(ctx)
 
         mocked.assert_called_once_with(
             ctx.conf.SAASLITE_S3_BUCKET_REGION,
             ctx.conf.SAASLITE_S3_BUCKET_NAME,
-            ctx.filename,
+            f'{ctx.filename}.db',
         )
         mocked().exists.assert_called_once_with()
         mocked().sql.assert_not_called()
