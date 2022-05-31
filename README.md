@@ -85,8 +85,8 @@ To use this service is as easy as uploading your SQLite database to your S3
 bucket and querying it using your favourite HTTP client:
 
 ```sh
-$ aws s3 cp your.db s3://bucket/dbs/your.db
-$ xh GET your-lambda.com/your.db q=='SELECT 123 AS num'
+$ aws s3 cp your.db s3://bucket/your.db
+$ xh /your.db q=='SELECT 123 AS num'
 [
     {
         "num": 123
