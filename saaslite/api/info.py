@@ -7,10 +7,12 @@ class Result(BaseModel):
 
 DB_GET = {
     'response_model': Result,
+    'description': 'Query a SQLite database',
 }
 
 CSV_GET = {
     'response_model': Result,
+    'description': 'Query a CSV file',
 }
 
 
@@ -21,4 +23,5 @@ class Upload(BaseModel):
 
 UPLOAD_POST = {
     'response_model': Upload,
+    'description': 'Creates a temporary upload URL to upload your own file',
 }
