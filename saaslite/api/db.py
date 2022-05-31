@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from saaslite.api import info
 from saaslite.config import Conf
 from saaslite.file import FileDB
 
@@ -18,7 +19,7 @@ class Query:
     conf: Conf = Depends(Conf)
 
 
-@router.get('/{filename}.db')
+@router.get('/{filename}.db', **info.DB_GET)
 async def get(ctx: Query = Depends(Query)) -> list:
     logger.info('%s', ctx)
 

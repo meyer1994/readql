@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from saaslite.api import info
 from saaslite.url import Presigned
 from saaslite.config import Conf
 
@@ -23,7 +24,7 @@ class Post:
     conf: Conf = Depends(Conf)
 
 
-@router.post('/')
+@router.post('/', **info.UPLOAD_POST)
 async def post(ctx: Post = Depends(Post)) -> dict:
     logger.info('%s', ctx)
 

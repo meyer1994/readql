@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import constr
 
+from saaslite.api import info
 from saaslite.config import Conf
 from saaslite.file import FileCSV
 
@@ -27,7 +28,7 @@ class Query:
     conf: Conf = Depends(Conf)
 
 
-@router.get('/{filename}.csv')
+@router.get('/{filename}.csv', **info.CSV_GET)
 async def get(ctx: Query = Depends(Query)) -> list:
     logger.info('%s', ctx)
 
