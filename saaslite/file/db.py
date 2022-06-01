@@ -72,4 +72,14 @@ class FileDB(FileBase):
         connection.setrowtrace(DictRowFactory)
 
         cursor = connection.cursor()
+
+        # Most were copied from:
+        #   https://avi.im/blag/2021/fast-sqlite-inserts/
+        cursor.execute('PRAGMA page_size = 65536')
+        cursor.execute('PRAGMA journal_mode = OFF')
+        cursor.execute('PRAGMA synchronous = 0')
+        cursor.execute('PRAGMA cache_size = 1000000')
+        cursor.execute('PRAGMA locking_mode = EXCLUSIVE')
+        cursor.execute('PRAGMA temp_store = MEMORY')
+
         yield from cursor.execute(sql)
