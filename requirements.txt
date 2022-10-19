@@ -1,6 +1,6 @@
 anyio==3.6.1
 apsw==3.39.4.0
-boto3==1.24.91
+boto3==1.24.94
 botocore==1.27.92
 fastapi==0.84.0
 idna==3.4
