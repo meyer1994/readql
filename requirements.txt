@@ -1,7 +1,7 @@
 anyio==3.6.2
 apsw==3.40.0.0
 boto3==1.26.43
-botocore==1.29.43
+botocore==1.29.45
 fastapi==0.88.0
 idna==3.4
 jmespath==1.0.1
