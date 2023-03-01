@@ -1,4 +1,4 @@
-FROM amazon/aws-lambda-python:3.9
+FROM amazon/aws-lambda-python:3.10
 
 ADD requirements.txt  .
 RUN  pip install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
