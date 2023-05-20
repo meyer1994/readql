@@ -1,5 +1,5 @@
 anyio==3.6.2
-apsw==3.41.2.0
+apsw==3.42.0.0
 boto3==1.26.133
 botocore==1.29.137
 fastapi==0.89.1
