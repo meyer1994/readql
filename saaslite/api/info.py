@@ -1,8 +1,7 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, HttpUrl, RootModel
 
 
-class Result(BaseModel):
-    __root__: list[dict]
+Result = RootModel[list[dict]]
 
 
 DB_GET = {

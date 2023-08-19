@@ -1,13 +1,13 @@
-from unittest import TestCase
+from unittest import IsolatedAsyncioTestCase
 from unittest.mock import patch
 
 from saaslite import config
 
 
-class TestConfig(TestCase):
+class TestConfig(IsolatedAsyncioTestCase):
 
-    @patch('config.Config')
+    @patch.object(config, 'Config')
     async def test_config(self, mocked):
         """ Calls Config constructor """
-        config.Conf()
+        await config.Conf()
         mocked.assert_called_once_with()
