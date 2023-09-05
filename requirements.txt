@@ -1,5 +1,5 @@
 apsw==3.42.0.1
-boto3==1.28.40
+boto3==1.28.41
 fastapi==0.103.1
 pydantic==2.2.1
 pydantic-settings==2.0.3
