@@ -22,13 +22,13 @@ class TestUrlGen(S3MinioMixin):
 
     def test_url_gen(self):
         urlgen = UrlGen(self.client, 'test-bucket-urlgen')
-        url = urlgen.generate('TEST_URLGEN', seconds=1)
+        url = urlgen.generate('TEST_URLGEN', seconds=10)
         response = httpx.put(url, data=b'nice')
         self.assertEqual(response.status_code, 200)
 
     def test_url_gen_expired(self):
         urlgen = UrlGen(self.client, 'test-bucket-urlgen')
         url = urlgen.generate('TEST_URLGEN', seconds=1)
-        time.sleep(1.5)
+        time.sleep(2)
         response = httpx.put(url, data=b'nice')
         self.assertEqual(response.status_code, 403)
