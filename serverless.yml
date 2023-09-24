@@ -1,6 +1,6 @@
-service: sass
-
+service: readql
 frameworkVersion: '3'
+
 
 provider:
   name: aws
@@ -18,17 +18,19 @@ provider:
     role:
       statements:
         - Effect: 'Allow'
-          Resource: 'arn:aws:s3:::${self:resources.Resources.bucket.Properties.BucketName}/*'
-          Action: 's3:GetObject'
-        - Effect: 'Allow'
-          Resource: 'arn:aws:s3:::${self:resources.Resources.bucket.Properties.BucketName}/*'
-          Action: 's3:PutObject'
+          Resource: 
+            - 'arn:aws:s3:::${self:resources.Resources.bucket.Properties.BucketName}/*'
+            - 'arn:aws:s3:::${self:resources.Resources.bucket.Properties.BucketName}/*'
+          Action: 
+            - 's3:GetObject'
+            - 's3:PutObject'
+
 
 functions:
-  saaslite:
-    image: saaslite
+  readql:
+    image: readql
     timeout: 10
-    memorySize: 128
+    memorySize: 256
     events:
       - httpApi:
           method: GET
@@ -37,12 +39,12 @@ functions:
           method: POST
           path: '/'
     environment:
-      SAASLITE_S3_BUCKET_NAME: ${self:resources.Resources.bucket.Properties.BucketName}
-      SAASLITE_S3_BUCKET_REGION: ${self:provider.region}
+      READQL_S3_BUCKET_NAME: ${self:resources.Resources.bucket.Properties.BucketName}
+
 
 resources:
   Resources:
     bucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: saaslite
+        BucketName: readql
