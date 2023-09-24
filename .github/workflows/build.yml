@@ -53,6 +53,10 @@ jobs:
         with:
           node-version: current
           cache: npm
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
       - run: npm ci
       - run: npx serverless deploy --verbose
       - run: aws s3 sync tests/data s3://readql --region eu-west-1
