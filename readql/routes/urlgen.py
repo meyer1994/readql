@@ -29,6 +29,6 @@ def urlgen(ctx: Annotated[Context, Depends(Context)]) -> UrlGenResponse:
     key = f'{ctx.uid}.{ctx.type.value}'
     key = key.lower()
 
-    url = ctx.urlgen.generate(key, seconds=10)
+    url = ctx.urlgen.generate(key, seconds=600)
 
     return dict(key=key, url=url)

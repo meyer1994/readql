@@ -17,4 +17,4 @@ class TestRoutesUrlGen(TestCase):
         self.assertDictEqual(result, {'key': f'{ctx.uid}.csv', 'url': ANY})
 
         ctx.urlgen.generate\
-            .assert_called_once_with(f'{ctx.uid}.csv', seconds=10)
+            .assert_called_once_with(f'{ctx.uid}.csv', seconds=600)
