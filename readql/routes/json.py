@@ -21,7 +21,7 @@ class JsonType(str, Enum):
 @dataclass
 class Context:
     config: deps.Config
-    session: deps.Session
+    client: deps.Client
     key: str = Path(..., example='test')
     q: str = Query(..., example='SELECT * FROM s3Object')
     type: JsonType = Query(JsonType.DOCUMENT)
@@ -31,7 +31,7 @@ class Context:
 @router.get('/{key}.json')
 def json(ctx: Annotated[Context, Depends(Context)]) -> Iterable[dict]:
     table = JSON(
-        session=ctx.session, 
+        client=ctx.client, 
         bucket=ctx.config.READQL_S3_BUCKET_NAME, 
         key=f'{ctx.key}.json'
     )

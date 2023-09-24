@@ -23,7 +23,7 @@ class CsvHeader(str, Enum):
 @dataclass
 class Context:
     config: deps.Config
-    session: deps.Session
+    client: deps.Client
     key: str = Path(..., example='test')
     q: str = Query(..., example='SELECT * FROM s3Object')
     header: CsvHeader = Query(CsvHeader.NONE)
@@ -34,7 +34,7 @@ class Context:
 @router.get('/{key}.csv')
 def csv(ctx: Annotated[Context, Depends(Context)]) -> Iterable[dict]:
     table = CSV(
-        session=ctx.session, 
+        client=ctx.client, 
         bucket=ctx.config.READQL_S3_BUCKET_NAME, 
         key=f'{ctx.key}.csv'
     )

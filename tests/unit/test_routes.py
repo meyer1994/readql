@@ -23,7 +23,7 @@ class TestRoutes(TestCase):
         csv(ctx)
 
         CSV.assert_called_once_with(
-            session=ctx.session,
+            client=ctx.client,
             bucket='TEST_BUCKET',
             key='TEST_KEY.csv'
         )
@@ -50,7 +50,7 @@ class TestRoutes(TestCase):
         json(ctx)
 
         JSON.assert_called_once_with(
-            session=ctx.session,
+            client=ctx.client,
             bucket='TEST_BUCKET',
             key='TEST_KEY.json'
         )
@@ -75,7 +75,7 @@ class TestRoutes(TestCase):
         parquet(ctx)
 
         Parquet.assert_called_once_with(
-            session=ctx.session,
+            client=ctx.client,
             bucket='TEST_BUCKET',
             key='TEST_KEY.parquet'
         )
@@ -99,7 +99,7 @@ class TestRoutes(TestCase):
         sqlite(ctx)
 
         Sqlite.assert_called_once_with(
-            session=ctx.session,
+            client=ctx.client,
             bucket='TEST_BUCKET',
             key='TEST_KEY.sqlite'
         )
@@ -120,7 +120,7 @@ class TestRoutes(TestCase):
             csv(ctx)
 
         CSV.assert_called_once_with(
-            session=ctx.session,
+            client=ctx.client,
             bucket='TEST_BUCKET',
             key='TEST_KEY.csv'
         )
@@ -137,7 +137,7 @@ class TestRoutes(TestCase):
             json(ctx)
 
         JSON.assert_called_once_with(
-            session=ctx.session,
+            client=ctx.client,
             bucket='TEST_BUCKET',
             key='TEST_KEY.json'
         )
@@ -154,7 +154,7 @@ class TestRoutes(TestCase):
             parquet(ctx)
 
         Parquet.assert_called_once_with(
-            session=ctx.session,
+            client=ctx.client,
             bucket='TEST_BUCKET',
             key='TEST_KEY.parquet'
         )
@@ -171,7 +171,7 @@ class TestRoutes(TestCase):
             sqlite(ctx)
 
         Sqlite.assert_called_once_with(
-            session=ctx.session,
+            client=ctx.client,
             bucket='TEST_BUCKET',
             key='TEST_KEY.sqlite'
         )

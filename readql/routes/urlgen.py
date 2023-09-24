@@ -31,4 +31,4 @@ def urlgen(ctx: Annotated[Context, Depends(Context)]) -> UrlGenResponse:
 
     url = ctx.urlgen.generate(key, seconds=10)
 
-    return UrlGenResponse(key=key, url=url)
+    return dict(key=key, url=url)

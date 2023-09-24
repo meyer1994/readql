@@ -15,7 +15,7 @@ router = APIRouter()
 @dataclass
 class Context:
     config: deps.Config
-    session: deps.Session
+    client: deps.Client
     key: str = Path(..., example='test')
     q: str = Query(..., example='SELECT * FROM test')
 
@@ -23,7 +23,7 @@ class Context:
 @router.get('/{key}.sqlite')
 def sqlite(ctx: Annotated[Context, Depends(Context)]) -> Iterable[dict]:
     table = Sqlite(
-        session=ctx.session, 
+        client=ctx.client, 
         bucket=ctx.config.READQL_S3_BUCKET_NAME, 
         key=f'{ctx.key}.sqlite',
     )

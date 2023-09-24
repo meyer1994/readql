@@ -14,14 +14,12 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Base(ABC):
-    session: boto3.Session
+    client: Client
     bucket: str = field(repr=False)
     key: str = field(repr=False)
     uri: str = field(init=False)
-    client: Client = field(init=False, repr=False)
 
     def __post_init__(self):
-        self.client = self.session.client('s3')
         self.uri = f's3://{self.bucket}/{self.key}'
 
     @abstractmethod
@@ -41,7 +39,7 @@ class Base(ABC):
 
         if 'Payload' not in response:
             logger.info('No payload in response %s', response)
-            return []
+            return
 
         for payload in response['Payload']:
             if 'Records' not in payload:
@@ -63,7 +61,7 @@ class Base(ABC):
         logger.info('Checking existence of %s', self.uri)
 
         try:
-            self.client.head_object(Bucket=self.bucket, Key=self.key)  # noqa
+            self.client.head_object(Bucket=self.bucket, Key=self.key)
         except ClientError as e:
             if e.response['Error']['Code'] == '404':
                 logger.info('Object %s does not exist', self.uri)
