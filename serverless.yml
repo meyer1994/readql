@@ -11,7 +11,7 @@ provider:
 
   ecr:
     images:
-      saaslite:
+      readql:
         path: './'
 
   iam:
