@@ -3,7 +3,7 @@ import logging
 
 from mangum import Mangum
 
-from saaslite import app
+from readql import app
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
