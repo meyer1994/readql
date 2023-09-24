@@ -24,10 +24,17 @@ provider:
         - Effect: 'Allow'
           Resource: 
             - 'arn:aws:s3:::${self:resources.Resources.bucket.Properties.BucketName}/*'
-            - 'arn:aws:s3:::${self:resources.Resources.bucket.Properties.BucketName}/*'
           Action: 
             - 's3:GetObject'
             - 's3:PutObject'
+            - 's3:DeleteObject'
+
+
+package:
+  patterns:
+    - '!./**'
+    - './handler.py'
+    - './readql/**'
 
 
 functions:
@@ -41,6 +48,17 @@ functions:
           path: '/{proxy+}'
     environment:
       READQL_S3_BUCKET_NAME: ${self:resources.Resources.bucket.Properties.BucketName}
+  
+  s3guard:
+    handler: handler.s3guard
+    timeout: 10
+    memorySize: 128
+    events:
+      - s3:
+          bucket: ${self:resources.Resources.bucket.Properties.BucketName}
+          event: 's3:ObjectCreated:*'
+          existing: true
+          forceDeploy: true
 
 
 resources:
