@@ -55,3 +55,4 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx serverless deploy --verbose
+      - run: aws s3 sync tests/data readql
