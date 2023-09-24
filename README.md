@@ -1,9 +1,9 @@
-# SaasLite
+# Readql
 
-[![build](https://github.com/meyer1994/saaslite/actions/workflows/build.yml/badge.svg)](https://github.com/meyer1994/saaslite/actions/workflows/build.yml)
+[![build](https://github.com/meyer1994/readql/actions/workflows/build.yml/badge.svg)](https://github.com/meyer1994/readql/actions/workflows/build.yml)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-Read only SQLite as a service
+Http interface to query S3 objects and Sqlite databases
 
 ## Table of Contents
 
@@ -23,7 +23,7 @@ to host the file yourself.
 Some use cases might be:
 
 - Making the database available for [JAMStack][3] applications hosted on
-services like [Cloudflare][4] workers, [Vercel][5], [Netlify][6], or others
+  services like [Cloudflare][4] workers, [Vercel][5], [Netlify][6], or others
 - Sharing a database with multiple services without the need of replicating it
 - Something else... (I am not creative today)
 
@@ -59,11 +59,10 @@ $ pip install -r requirements.txt
 
 If you want to run it locally:
 
-```sh
-$ pip install uvicorn
-$ export SAASLITE_S3_BUCKET_NAME=bucket-name
-$ export SAASLITE_S3_BUCKET_REGION=bucket-region
-$ uvicorn handler:app
+```bash
+pip install uvicorn
+export READQL_S3_BUCKET_NAME=bucket-name
+uvicorn handler:app
 # Application should be available on `localhost:8000`
 ```
 
@@ -94,14 +93,35 @@ $ xh /your.db q=='SELECT 123 AS num'
 ]
 ```
 
+If you want, you can use the hosted version:
+
+```bash
+xh https://readql.jmeyer.dev type==CSV
+{
+    "key": "UUID.csv",
+    "url": "presigned.s3.url"  # expires in 10 minutes
+}
+```
+
+And just upload to that URL. You can query the file using:
+
+```bash
+xh https://readql.jmeyer.dev/test.csv q=='SELECT * FROM s3Object'
+{
+    "a": "1",
+    "b": "2",
+    "c": "3",
+}
+```
+
 That is it! Have fun!
 
 ## Thanks
 
 - [@rogerbinns][11] for creating the [APSW][10] which allowed me to
-do this.
+  do this.
 - [@uktrade][12] for the [implementation][13] that I used as a base to my own
-VFS.
+  VFS.
 
 [1]: https://sqlite.org/
 [2]: https://aws.amazon.com/s3/
