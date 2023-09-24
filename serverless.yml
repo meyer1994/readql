@@ -32,7 +32,7 @@ functions:
     timeout: 10
     memorySize: 256
     events:
-      - http:
+      - httpApi:
           method: GET
           path: '/{proxy+}'
     environment:
