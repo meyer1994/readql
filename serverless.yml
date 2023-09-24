@@ -61,6 +61,17 @@ functions:
           forceDeploy: true
 
 
+plugins:
+  - serverless-python-requirements
+
+
+custom:
+  pythonRequirements:
+    noDeploy:
+      - boto3
+      - botocore
+
+
 resources:
   Resources:
     bucket:
