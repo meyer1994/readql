@@ -33,9 +33,9 @@ functions:
     memorySize: 256
     events:
       - http:
-        method: GET
-        path: '/{proxy+}'
-        cors: true
+          method: GET
+          path: '/{proxy+}'
+          cors: true
     environment:
       READQL_S3_BUCKET_NAME: ${self:resources.Resources.bucket.Properties.BucketName}
 
