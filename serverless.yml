@@ -9,8 +9,9 @@ provider:
   logRetentionInDays: 7
   versionFunctions: false
 
-  apiName: readql
-  endpointType: edge
+  httpApi:
+    cors: true
+    metrics: true
 
   ecr:
     images:
