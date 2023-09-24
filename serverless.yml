@@ -9,6 +9,9 @@ provider:
   logRetentionInDays: 7
   versionFunctions: false
 
+  apiName: readql
+  endpointType: edge
+
   ecr:
     images:
       readql:
@@ -32,9 +35,12 @@ functions:
     timeout: 10
     memorySize: 256
     events:
-      - httpApi:
+      - http:
           method: GET
           path: '/{proxy+}'
+      - http:
+          method: GET
+          path: '/'
     environment:
       READQL_S3_BUCKET_NAME: ${self:resources.Resources.bucket.Properties.BucketName}
 
