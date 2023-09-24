@@ -10,14 +10,14 @@ jobs:
 
     services:
       minio:
-        image: minio/minio
+        image: bitnami/minio:latest
         ports:
           - 9000:9000
-        environment:
+        env:
           MINIO_ROOT_USER: 'root'
           MINIO_ROOT_PASSWORD: 'password'
           MINIO_API_SELECT_PARQUET: 'on'
-        command: minio server /data/minio
+        options: --name minio-server
 
     steps:
       - uses: actions/checkout@v3
@@ -31,11 +31,13 @@ jobs:
       - run: python -m unittest discover -vb tests/unit
       - run: python -m unittest discover -vb tests/integration
 
+
   image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: docker build . -t readql
+
 
   deploy:
     if: github.ref == 'refs/heads/master'
