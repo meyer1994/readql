@@ -54,7 +54,7 @@ This application was created to run on [Lambda][7] functions. It assumes you
 have the S3 instance deployed and with the `GetObject` permission properly set.
 
 ```sh
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 If you want to run it locally:
@@ -72,7 +72,7 @@ We use [Serverless][8] framework to deploy the project to AWS Lambda. So, to
 deploy it is as easy as:
 
 ```sh
-$ npx serverless deploy
+npx serverless deploy --verbose
 ```
 
 [Docker][9] deployment is used because [APSW][10] did not like the default
@@ -84,8 +84,8 @@ To use this service is as easy as uploading your SQLite database to your S3
 bucket and querying it using your favourite HTTP client:
 
 ```sh
-$ aws s3 cp your.db s3://bucket/your.db
-$ xh /your.db q=='SELECT 123 AS num'
+aws s3 cp your.db s3://bucket/your.db
+xh /your.db q=='SELECT 123 AS num'
 [
     {
         "num": 123
