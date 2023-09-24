@@ -7,20 +7,35 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      minio:
+        image: minio/minio
+        ports:
+          - 9000:9000
+        environment:
+          MINIO_ROOT_USER: 'root'
+          MINIO_ROOT_PASSWORD: 'password'
+          MINIO_API_SELECT_PARQUET: 'on'
+        command: minio server /data/minio
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.11'
           cache: 'pip'
       - run: pip install -r requirements.txt
+      - run: pip install -r requirements-dev.txt
       - run: python -m unittest discover -vb tests/
+      - run: python -m unittest discover -vb tests/unit
+      - run: python -m unittest discover -vb tests/integration
 
   image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: docker build . -t saaslite
+      - run: docker build . -t readql
 
   deploy:
     if: github.ref == 'refs/heads/master'
@@ -38,5 +53,4 @@ jobs:
           node-version: current
           cache: npm
       - run: npm ci
-      - run: npx serverless package --verbose
       - run: npx serverless deploy --verbose
