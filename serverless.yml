@@ -32,12 +32,10 @@ functions:
     timeout: 10
     memorySize: 256
     events:
-      - httpApi:
-          method: GET
-          path: '/{param}'
-      - httpApi:
-          method: POST
-          path: '/'
+      - http:
+        method: GET
+        path: '/{proxy+}'
+        cors: true
     environment:
       READQL_S3_BUCKET_NAME: ${self:resources.Resources.bucket.Properties.BucketName}
 
