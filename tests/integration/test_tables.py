@@ -2,6 +2,7 @@ from pathlib import Path
 
 from readql.tables.csv import CSV
 from readql.tables.json import JSON
+from readql.tables.sqlite import Sqlite
 from readql.tables.parquet import Parquet
 
 from tests.mixins import S3MinioMixin
@@ -166,6 +167,24 @@ class TestTables(S3MinioMixin):
             sql='SELECT * FROM s3Object', 
             compression='NONE',
         )
+        result = list(result)
+
+        self.assertEqual(len(result), 1)
+        self.assertDictEqual(result[0], {
+            'a': 1,
+            'b': 2,
+            'c': 3,
+        })
+
+    def test_table_sqlite(self):
+        self.bucket.upload_file(
+            Filename=DATA_DIR / 'test.sqlite', 
+            Key='TEST_KEY_SQLITE'
+        )
+
+        table = Sqlite(self.client, self.bucket.name, 'TEST_KEY_SQLITE')
+
+        result = table.sql(sql='SELECT * FROM test')
         result = list(result)
 
         self.assertEqual(len(result), 1)
