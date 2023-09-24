@@ -14,7 +14,7 @@ def _Config() -> config.Config:
 
 
 def _Client() -> Client:
-    return boto3.Session()
+    return boto3.client('s3')
 
 
 Config = Annotated[config.Config, Depends(_Config)]
