@@ -22,14 +22,14 @@ class TestTables(S3MinioMixin):
 
     def test_table_csv(self):
         self.bucket.upload_file(
-            Filename=DATA_DIR / 'test.csv', 
+            Filename=DATA_DIR / 'test.csv',
             Key='TEST_KEY_CSV'
         )
 
         table = CSV(self.client, self.bucket.name, 'TEST_KEY_CSV')
 
         result = table.sql(
-            sql='SELECT * FROM s3Object', 
+            sql='SELECT * FROM s3Object',
             header='USE',
             compression='NONE',
             delimiter=',',
@@ -45,14 +45,14 @@ class TestTables(S3MinioMixin):
 
     def test_table_csv_gzip(self):
         self.bucket.upload_file(
-            Filename=DATA_DIR / 'test.csv.gz', 
+            Filename=DATA_DIR / 'test.csv.gz',
             Key='TEST_KEY_CSV_GZIP'
         )
 
         table = CSV(self.client, self.bucket.name, 'TEST_KEY_CSV_GZIP')
 
         result = table.sql(
-            sql='SELECT * FROM s3Object', 
+            sql='SELECT * FROM s3Object',
             header='USE',
             compression='GZIP',
             delimiter=',',
@@ -68,14 +68,14 @@ class TestTables(S3MinioMixin):
 
     def test_table_csv_bzip2(self):
         self.bucket.upload_file(
-            Filename=DATA_DIR / 'test.csv.bz2', 
+            Filename=DATA_DIR / 'test.csv.bz2',
             Key='TEST_KEY_CSV_BZIP2'
         )
 
         table = CSV(self.client, self.bucket.name, 'TEST_KEY_CSV_BZIP2')
 
         result = table.sql(
-            sql='SELECT * FROM s3Object', 
+            sql='SELECT * FROM s3Object',
             header='USE',
             compression='BZIP2',
             delimiter=',',
@@ -91,14 +91,14 @@ class TestTables(S3MinioMixin):
 
     def test_table_json(self):
         self.bucket.upload_file(
-            Filename=DATA_DIR / 'test.json', 
+            Filename=DATA_DIR / 'test.json',
             Key='TEST_KEY_JSON'
         )
 
         table = JSON(self.client, self.bucket.name, 'TEST_KEY_JSON')
 
         result = table.sql(
-            sql='SELECT * FROM s3Object', 
+            sql='SELECT * FROM s3Object',
             compression='NONE',
             type='DOCUMENT',
         )
@@ -113,14 +113,14 @@ class TestTables(S3MinioMixin):
 
     def test_table_json_gzip(self):
         self.bucket.upload_file(
-            Filename=DATA_DIR / 'test.json.gz', 
+            Filename=DATA_DIR / 'test.json.gz',
             Key='TEST_KEY_JSON_GZIP'
         )
 
         table = JSON(self.client, self.bucket.name, 'TEST_KEY_JSON_GZIP')
 
         result = table.sql(
-            sql='SELECT * FROM s3Object', 
+            sql='SELECT * FROM s3Object',
             compression='GZIP',
             type='DOCUMENT',
         )
@@ -135,14 +135,14 @@ class TestTables(S3MinioMixin):
 
     def test_table_json_bzip2(self):
         self.bucket.upload_file(
-            Filename=DATA_DIR / 'test.json.bz2', 
+            Filename=DATA_DIR / 'test.json.bz2',
             Key='TEST_KEY_JSON_BZIP2'
         )
 
         table = JSON(self.client, self.bucket.name, 'TEST_KEY_JSON_BZIP2')
 
         result = table.sql(
-            sql='SELECT * FROM s3Object', 
+            sql='SELECT * FROM s3Object',
             compression='BZIP2',
             type='DOCUMENT',
         )
@@ -157,7 +157,7 @@ class TestTables(S3MinioMixin):
 
     def test_table_parquet(self):
         self.bucket.upload_file(
-            Filename=DATA_DIR / 'test.parquet', 
+            Filename=DATA_DIR / 'test.parquet',
             Key='TEST_KEY_PARQUET'
         )
 
@@ -175,7 +175,7 @@ class TestTables(S3MinioMixin):
 
     def test_table_sqlite(self):
         self.bucket.upload_file(
-            Filename=DATA_DIR / 'test.sqlite', 
+            Filename=DATA_DIR / 'test.sqlite',
             Key='TEST_KEY_SQLITE'
         )
 
@@ -190,3 +190,17 @@ class TestTables(S3MinioMixin):
             'b': 2,
             'c': 3,
         })
+
+    def test_table_exists(self):
+        table = Sqlite(self.client, self.bucket.name, 'TEST_KEY_SQLITE')
+
+        result = table.exists()
+        self.assertFalse(result)
+
+        self.bucket.upload_file(
+            Filename=DATA_DIR / 'test.sqlite',
+            Key='TEST_KEY_SQLITE'
+        )
+
+        result = table.exists()
+        self.assertTrue(result)

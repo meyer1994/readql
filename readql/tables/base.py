@@ -4,7 +4,6 @@ from typing import Iterable
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 
-import boto3
 from mypy_boto3_s3 import Client
 from botocore.errorfactory import ClientError
 
