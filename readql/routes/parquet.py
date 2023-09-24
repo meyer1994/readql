@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Annotated, Iterable
 from dataclasses import dataclass
 
@@ -6,13 +5,13 @@ from fastapi import APIRouter, Query, Path, Depends
 
 import readql.dependencies as deps
 from readql.tables import Parquet
-from readql.models import CompressionType
 from readql.errors import FileNotFoundError
 
 
 router = APIRouter()
 
 
+@dataclass
 class Context:
     config: deps.Config
     client: deps.Client

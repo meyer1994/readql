@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Annotated, Iterable
 from dataclasses import dataclass
 
