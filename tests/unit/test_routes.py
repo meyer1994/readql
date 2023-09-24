@@ -82,13 +82,10 @@ class TestRoutes(TestCase):
 
         table = Parquet.return_value
         table.exists.assert_called_once_with()
-        table.sql.assert_called_once_with(
-            sql='TEST_SQL',
-            compression='TEST_COMPRESSION',
-        )
+        table.sql.assert_called_once_with(sql='TEST_SQL')
 
     @patch('readql.routes.sqlite.Sqlite')
-    def test_parquet_sqlite(self, Sqlite):
+    def test_sqlite(self, Sqlite):
         ctx = Mock()
         ctx.q = 'TEST_SQL'
         ctx.key = 'TEST_KEY'
@@ -160,7 +157,7 @@ class TestRoutes(TestCase):
         )
 
     @patch('readql.routes.sqlite.Sqlite')
-    def test_parquet_not_exists(self, Sqlite):
+    def test_sqlite_not_exists(self, Sqlite):
         ctx = Mock()
         ctx.q = 'TEST_SQL'
         ctx.key = 'TEST_KEY'

@@ -18,7 +18,6 @@ class Context:
     client: deps.Client
     key: str = Path(..., example='test')
     q: str = Query(..., example='SELECT * FROM s3Object')
-    compression: CompressionType = Query(CompressionType.NONE)
 
 
 @router.get('/{key}.parquet')
@@ -32,4 +31,4 @@ def parquet(ctx: Annotated[Context, Depends(Context)]) -> Iterable[dict]:
     if not table.exists():
         raise FileNotFoundError(f'{ctx.key}.parquet')
 
-    return table.sql(sql=ctx.q, compression=ctx.compression.value)
+    return table.sql(sql=ctx.q)

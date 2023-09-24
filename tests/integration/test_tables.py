@@ -163,10 +163,7 @@ class TestTables(S3MinioMixin):
 
         table = Parquet(self.client, self.bucket.name, 'TEST_KEY_PARQUET')
 
-        result = table.sql(
-            sql='SELECT * FROM s3Object', 
-            compression='NONE',
-        )
+        result = table.sql(sql='SELECT * FROM s3Object')
         result = list(result)
 
         self.assertEqual(len(result), 1)

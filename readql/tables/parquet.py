@@ -8,8 +8,5 @@ logger = logging.getLogger(__name__)
 
 
 class Parquet(Base):
-    def sql(self, sql: str, compression: str) -> Iterable[dict]:
-        yield from self._sql(sql, {
-            'Parquet': {},
-            'CompressionType': compression,
-        })
+    def sql(self, sql: str) -> Iterable[dict]:
+        yield from self._sql(sql, {'Parquet': {}})

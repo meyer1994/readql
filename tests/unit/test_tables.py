@@ -48,13 +48,7 @@ class TestTables(TestCase):
         parquet = tables.Parquet(session, 'TEST_BUCKET', 'TEST_KEY')
         parquet._sql = MagicMock()
 
-        result = parquet.sql(
-            sql='TEST_SQL', 
-            compression='TEST_COMPRESSION',
-        )
+        result = parquet.sql(sql='TEST_SQL')
         list(result)
 
-        parquet._sql.assert_called_once_with('TEST_SQL', {
-            'Parquet': {},
-            'CompressionType': 'TEST_COMPRESSION',
-        })
+        parquet._sql.assert_called_once_with('TEST_SQL', {'Parquet': {}})
