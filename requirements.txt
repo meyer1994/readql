@@ -4,4 +4,4 @@ boto3==1.28.55
 fastapi==0.101.1
 mangum==0.17.0
 pydantic-settings==2.0.3
-pydantic==2.2.1
+pydantic==2.4.1
