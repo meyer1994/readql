@@ -1,5 +1,5 @@
 apsw==3.43.1.0
-boto3-stubs[s3]==1.28.63
+boto3-stubs[s3]==1.29.2
 boto3==1.28.65
 fastapi==0.103.2
 mangum==0.17.0
