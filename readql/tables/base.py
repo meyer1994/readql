@@ -1,12 +1,11 @@
 import json
 import logging
-from typing import Iterable
-from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from typing import Iterable
 
-from mypy_boto3_s3 import Client
 from botocore.errorfactory import ClientError
-
+from mypy_boto3_s3 import Client
 
 logger = logging.getLogger(__name__)
 
@@ -19,34 +18,34 @@ class Base(ABC):
     uri: str = field(init=False)
 
     def __post_init__(self):
-        self.uri = f's3://{self.bucket}/{self.key}'
+        self.uri = f"s3://{self.bucket}/{self.key}"
 
     @abstractmethod
     def sql(self, sql: str) -> Iterable[dict]:
         pass
 
     def _sql(self, sql: str, conf: dict) -> Iterable[dict]:
-        logger.info('Querying %s: %s', self.uri, sql)
+        logger.info("Querying %s: %s", self.uri, sql)
         response = self.client.select_object_content(
             Bucket=self.bucket,
             Key=self.key,
-            ExpressionType='SQL',
+            ExpressionType="SQL",
             Expression=sql,
             InputSerialization=conf,
-            OutputSerialization={'JSON': {}},
+            OutputSerialization={"JSON": {}},
         )
 
-        if 'Payload' not in response:
-            logger.info('No payload in response %s', response)
+        if "Payload" not in response:
+            logger.info("No payload in response %s", response)
             return
 
-        for payload in response['Payload']:
-            if 'Records' not in payload:
-                logger.info('No records in payload: %s', payload)
+        for payload in response["Payload"]:
+            if "Records" not in payload:
+                logger.info("No records in payload: %s", payload)
                 continue
 
-            records = payload['Records']['Payload']
-            records = records.split(b'\n')
+            records = payload["Records"]["Payload"]
+            records = records.split(b"\n")
             records.pop()  # last one, after splitting, is always empty
 
             for record in records:
@@ -57,15 +56,15 @@ class Base(ABC):
         Adapted from:
             https://stackoverflow.com/a/38376288
         """
-        logger.info('Checking existence of %s', self.uri)
+        logger.info("Checking existence of %s", self.uri)
 
         try:
             self.client.head_object(Bucket=self.bucket, Key=self.key)
         except ClientError as e:
-            if e.response['Error']['Code'] == '404':
-                logger.info('Object %s does not exist', self.uri)
+            if e.response["Error"]["Code"] == "404":
+                logger.info("Object %s does not exist", self.uri)
                 return False
             raise e
 
-        logger.info('Object %s exists', self.uri)
+        logger.info("Object %s exists", self.uri)
         return True
