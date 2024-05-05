@@ -18,7 +18,7 @@ class UrlGenResponse(BaseModel):
 
 @dataclass
 class Context:
-    urlgen: deps.UrlGen
+    urlgen: deps.GetUrlGen
     type: Annotated[FileType, Query(...)]
     uid: Annotated[uuid.UUID, Query(...)] = field(
         init=False,

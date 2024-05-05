@@ -4,25 +4,23 @@ import boto3
 from fastapi import Depends
 from mypy_boto3_s3 import Client
 
-from readql import config
-from readql import urlgen
+from readql import config, urlgen
 
 
-
-def _Config() -> config.Config:
+def get_config() -> config.Config:
     return config.Config()
 
 
-def _Client() -> Client:
-    return boto3.client('s3')
+def get_s3_client() -> Client:
+    return boto3.client("s3")
 
 
-Config = Annotated[config.Config, Depends(_Config)]
-Client = Annotated[Client, Depends(_Client)]
+GetConfig = Annotated[config.Config, Depends(get_config)]
+GetS3Client = Annotated[Client, Depends(get_s3_client)]
 
 
-def _UrlGen(client: Client, config: Config) -> urlgen.UrlGen:
+def get_urlgen(client: GetS3Client, config: GetConfig) -> urlgen.UrlGen:
     return urlgen.UrlGen(client, config.READQL_S3_BUCKET_NAME)
 
 
-UrlGen = Annotated[urlgen.UrlGen, Depends(_UrlGen)]
+GetUrlGen = Annotated[urlgen.UrlGen, Depends(get_urlgen)]

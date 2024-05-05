@@ -1,14 +1,14 @@
-from enum import Enum
+import enum
 
 
-class CompressionType(str, Enum):
-    NONE = 'NONE'
-    GZIP = 'GZIP'
-    BZIP2 = 'BZIP2'
+class CompressionType(enum.StrEnum):
+    NONE = "NONE"
+    GZIP = "GZIP"
+    BZIP2 = "BZIP2"
 
 
-class FileType(str, Enum):
-    CSV = 'CSV'
-    JSON = 'JSON'
-    SQLITE = 'SQLITE'
-    PARQUET = 'PARQUET'
+class FileType(enum.StrEnum):
+    CSV = "CSV"
+    JSON = "JSON"
+    SQLITE = "SQLITE"
+    PARQUET = "PARQUET"

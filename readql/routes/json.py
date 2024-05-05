@@ -19,8 +19,8 @@ class JsonType(str, Enum):
 
 @dataclass
 class Context:
-    config: deps.Config
-    client: deps.Client
+    config: deps.GetConfig
+    client: deps.GetS3Client
     key: Annotated[str, Path(example="test")]
     q: Annotated[str, Query(example="SELECT * FROM s3Object")]
     type: Annotated[JsonType, Query()] = JsonType.DOCUMENT
