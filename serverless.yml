@@ -1,6 +1,5 @@
 service: readql
-frameworkVersion: '3'
-
+frameworkVersion: "3"
 
 provider:
   name: aws
@@ -16,26 +15,24 @@ provider:
   ecr:
     images:
       readql:
-        path: './'
+        path: "./"
 
   iam:
     role:
       statements:
-        - Effect: 'Allow'
-          Resource: 
-            - 'arn:aws:s3:::${self:resources.Resources.bucket.Properties.BucketName}/*'
-          Action: 
-            - 's3:GetObject'
-            - 's3:PutObject'
-            - 's3:DeleteObject'
-
+        - Effect: "Allow"
+          Resource:
+            - "arn:aws:s3:::${self:resources.Resources.bucket.Properties.BucketName}/*"
+          Action:
+            - "s3:GetObject"
+            - "s3:PutObject"
+            - "s3:DeleteObject"
 
 package:
   patterns:
-    - '!./**'
-    - './handler.py'
-    - './readql/**'
-
+    - "!./**"
+    - "./handler.py"
+    - "./readql/**"
 
 functions:
   readql:
@@ -45,10 +42,10 @@ functions:
     events:
       - httpApi:
           method: GET
-          path: '/{proxy+}'
+          path: "/{proxy+}"
     environment:
       READQL_S3_BUCKET_NAME: ${self:resources.Resources.bucket.Properties.BucketName}
-  
+
   s3guard:
     handler: handler.s3guard
     timeout: 10
@@ -56,21 +53,18 @@ functions:
     events:
       - s3:
           bucket: ${self:resources.Resources.bucket.Properties.BucketName}
-          event: 's3:ObjectCreated:*'
+          event: "s3:ObjectCreated:*"
           existing: true
           forceDeploy: true
 
-
 plugins:
   - serverless-python-requirements
-
 
 custom:
   pythonRequirements:
     noDeploy:
       - boto3
       - botocore
-
 
 resources:
   Resources:
