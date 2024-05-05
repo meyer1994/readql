@@ -1,6 +1,6 @@
-from .csv import router as csv
-from .json import router as json
-from .sqlite import router as sqlite
-from .parquet import router as parquet
+from .csv import router as csv  # noqa
+from .json import router as json  # noqa
+from .parquet import router as parquet  # noqa
+from .sqlite import router as sqlite  # noqa
 
-from .urlgen import router as urlgen
+from .urlgen import router as urlgen  # noqa

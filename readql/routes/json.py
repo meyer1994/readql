@@ -1,46 +1,45 @@
+from dataclasses import dataclass
 from enum import Enum
 from typing import Annotated, Iterable
-from dataclasses import dataclass
 
-from fastapi import APIRouter, Query, Path, Depends
+from fastapi import APIRouter, Depends, Path, Query
 
 import readql.dependencies as deps
-from readql.tables import JSON
-from readql.models import CompressionType
 from readql.errors import FileNotFoundError
-
+from readql.models import CompressionType
+from readql.tables import JSON
 
 router = APIRouter()
 
 
 class JsonType(str, Enum):
-    DOCUMENT = 'DOCUMENT'
-    LINES = 'LINES'
+    DOCUMENT = "DOCUMENT"
+    LINES = "LINES"
 
 
 @dataclass
 class Context:
     config: deps.Config
     client: deps.Client
-    key: str = Path(..., example='test')
-    q: str = Query(..., example='SELECT * FROM s3Object')
-    type: JsonType = Query(JsonType.DOCUMENT)
-    compression: CompressionType = Query(CompressionType.NONE)
+    key: Annotated[str, Path(example="test")]
+    q: Annotated[str, Query(example="SELECT * FROM s3Object")]
+    type: Annotated[JsonType, Query()] = JsonType.DOCUMENT
+    compression: Annotated[CompressionType, Query()] = CompressionType.NONE
 
 
-@router.get('/{key}.json')
+@router.get("/{key}.json")
 def json(ctx: Annotated[Context, Depends(Context)]) -> Iterable[dict]:
     table = JSON(
-        client=ctx.client, 
-        bucket=ctx.config.READQL_S3_BUCKET_NAME, 
-        key=f'{ctx.key}.json'
+        client=ctx.client,
+        bucket=ctx.config.READQL_S3_BUCKET_NAME,
+        key=f"{ctx.key}.json",
     )
 
     if not table.exists():
-        raise FileNotFoundError(f'{ctx.key}.json')
+        raise FileNotFoundError(f"{ctx.key}.json")
 
     return table.sql(
-        sql=ctx.q, 
-        type=ctx.type.value, 
-        compression=ctx.compression.value
+        sql=ctx.q,
+        type=ctx.type.value,
+        compression=ctx.compression.value,
     )

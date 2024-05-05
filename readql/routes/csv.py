@@ -1,51 +1,48 @@
-from enum import Enum
-from typing import Annotated, Iterable
+import enum
 from dataclasses import dataclass
+from typing import Annotated, Iterable
 
-from pydantic import constr
-from fastapi import APIRouter, Query, Path, Depends
+from fastapi import APIRouter, Depends, Path, Query
 
 import readql.dependencies as deps
-from readql.tables import CSV
-from readql.models import CompressionType
 from readql.errors import FileNotFoundError
-
+from readql.models import CompressionType
+from readql.tables import CSV
 
 router = APIRouter()
 
 
-class CsvHeader(str, Enum):
-    USE = 'USE'
-    NONE = 'NONE'
-    IGNORE = 'IGNORE'
+class CsvHeader(enum.StrEnum):
+    USE = "USE"
+    NONE = "NONE"
+    IGNORE = "IGNORE"
 
 
 @dataclass
 class Context:
     config: deps.Config
     client: deps.Client
-    key: str = Path(..., example='test')
-    q: str = Query(..., example='SELECT * FROM s3Object')
-    header: CsvHeader = Query(CsvHeader.NONE)
-    delimiter: constr(min_length=1, max_length=1) = Query(',')
-    compression: CompressionType = Query(CompressionType.NONE)
+    key: Annotated[str, Path(example="test")]
+    q: Annotated[str, Query(example="SELECT * FROM s3Object")]
+    header: Annotated[CsvHeader, Query()] = CsvHeader.NONE
+    delimiter: Annotated[str, Query(max_length=1, min_length=1)] = ","
+    compression: Annotated[CompressionType, Query()] = CompressionType.NONE
 
 
-@router.get('/{key}.csv')
+@router.get("/{key}.csv")
 def csv(ctx: Annotated[Context, Depends(Context)]) -> Iterable[dict]:
     table = CSV(
-        client=ctx.client, 
-        bucket=ctx.config.READQL_S3_BUCKET_NAME, 
-        key=f'{ctx.key}.csv'
+        client=ctx.client,
+        bucket=ctx.config.READQL_S3_BUCKET_NAME,
+        key=f"{ctx.key}.csv",
     )
 
     if not table.exists():
-        raise FileNotFoundError(f'{ctx.key}.csv')
-    
-    return table.sql(
-        sql=ctx.q, 
-        delimiter=ctx.delimiter, 
-        header=ctx.header.value, 
-        compression=ctx.compression.value
-    )
+        raise FileNotFoundError(f"{ctx.key}.csv")
 
+    return table.sql(
+        sql=ctx.q,
+        delimiter=ctx.delimiter,
+        header=ctx.header.value,
+        compression=ctx.compression.value,
+    )
