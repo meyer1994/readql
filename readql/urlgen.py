@@ -9,9 +9,8 @@ class UrlGen:
     bucket: str
 
     def generate(self, key: str, seconds: int) -> str:
-        params = {'Bucket': self.bucket, 'Key': key}
         return self.client.generate_presigned_url(
-            Params=params,
             ExpiresIn=seconds,
-            ClientMethod='put_object'
+            ClientMethod="put_object",
+            Params={"Bucket": self.bucket, "Key": key},
         )
