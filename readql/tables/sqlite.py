@@ -51,6 +51,13 @@ class S3VFSFile(object):
         logger.info("File s3:/%s/%s has size %d", self.bucket, self.name, size)
         return size
 
+    def xSectorSize(self) -> int:
+        """
+        From here:
+            https://rogerbinns.github.io/apsw/vfs.html#apsw.VFSFile.xSectorSize
+        """
+        return 4096
+
     def xClose(self):
         pass
 
